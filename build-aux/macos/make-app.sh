@@ -34,6 +34,22 @@ fi
 # Schemas installed under PREFIX must be compiled for the app to start
 "$BREW_PREFIX/bin/glib-compile-schemas" "$PREFIX/share/glib-2.0/schemas"
 
+# Builder's interface relies on the Adwaita icon theme
+if [ ! -d "$BREW_PREFIX/share/icons/Adwaita" ]; then
+  echo "warning: the Adwaita icon theme is missing, many icons will not show." >&2
+  echo "         Install it with: brew install adwaita-icon-theme" >&2
+fi
+
+# Homebrew does not refresh the icon cache when a package installs icons, and
+# GTK ignores icons that are not in a cache that exists. Rebuild it so that
+# icons from packages such as libpanel are found.
+for dir in "$BREW_PREFIX/share/icons/hicolor" "$PREFIX/share/icons/hicolor"; do
+  if [ -d "$dir" ]; then
+    "$BREW_PREFIX/bin/gtk4-update-icon-cache" -f -t -q "$dir" || \
+      echo "warning: could not update the icon cache in $dir" >&2
+  fi
+done
+
 rm -rf "$APP"
 mkdir -p "$APP/Contents/MacOS" "$APP/Contents/Resources"
 
