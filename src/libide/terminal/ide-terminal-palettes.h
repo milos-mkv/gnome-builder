@@ -24,6 +24,11 @@
 
 G_BEGIN_DECLS
 
+#ifdef __clang__
+# pragma clang diagnostic push
+# pragma clang diagnostic ignored "-Warray-bounds"
+#endif
+
 #define _GDK_RGBA_DECODE(c) ((unsigned)(((c) >= 'A' && (c) <= 'F') ? ((c)-'A'+10) : \
                                         ((c) >= 'a' && (c) <= 'f') ? ((c)-'a'+10) : \
                                         ((c) >= '0' && (c) <= '9') ? ((c)-'0') : \
@@ -984,5 +989,9 @@ static const IdeTerminalPaletteData ide_terminal_palettes_inline[] = {
     },
 
 };
+
+#ifdef __clang__
+# pragma clang diagnostic pop
+#endif
 
 G_END_DECLS
