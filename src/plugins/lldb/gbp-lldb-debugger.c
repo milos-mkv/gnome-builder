@@ -28,6 +28,7 @@
 
 #include "config.h"
 
+#include <signal.h>
 #include <stdlib.h>
 #include <string.h>
 #include <unistd.h>
@@ -58,6 +59,7 @@ struct _GbpLldbDebugger
 
   GIOStream              *io_stream;
   GOutputStream          *inferior_out;
+  GQueue                  inferior_queue;  /* GBytes waiting to be written */
   GCancellable           *read_cancellable;
   GByteArray             *rx;
   guint8                  read_buffer[READ_BUFFER_LEN];
@@ -72,6 +74,7 @@ struct _GbpLldbDebugger
   char                   *cwd;
   char                  **env;
 
+  GPid                    inferior_pid;
   gint64                  seq;
   gint64                  current_thread;
   gint64                  top_frame_id;
@@ -81,6 +84,8 @@ struct _GbpLldbDebugger
   guint                   has_connected : 1;
   guint                   configured : 1;
   guint                   exited : 1;
+  guint                   inferior_busy : 1;
+  guint                   program_exited : 1;
 };
 
 G_DEFINE_FINAL_TYPE (GbpLldbDebugger, gbp_lldb_debugger, IDE_TYPE_DEBUGGER)
@@ -151,6 +156,20 @@ thread_arguments (gint64 thread_id)
   json_builder_end_object (builder);
 
   return json_builder_get_root (builder);
+}
+
+/* When the run is stopped, lldb-dap is killed and takes neither debugserver
+ * nor the program with it. Do not leave the program behind, stopped and with
+ * nothing to continue it.
+ */
+static void
+gbp_lldb_debugger_kill_orphan (GbpLldbDebugger *self)
+{
+  if (self->inferior_pid > 0 && !self->program_exited)
+    {
+      kill (self->inferior_pid, SIGKILL);
+      self->program_exited = TRUE;
+    }
 }
 
 /* ------------------------------------------------------------------ */
@@ -684,6 +703,98 @@ gbp_lldb_debugger_emit_exited (GbpLldbDebugger      *self,
   ide_debugger_emit_stopped (IDE_DEBUGGER (self), reason, location);
 }
 
+/* ------------------------------------------------------------------ */
+/* Program output                                                      */
+/* ------------------------------------------------------------------ */
+
+static void gbp_lldb_debugger_write_next_output (GbpLldbDebugger *self);
+
+static void
+gbp_lldb_debugger_log_target (GbpLldbDebugger *self,
+                              GBytes          *bytes)
+{
+  ide_debugger_emit_log (IDE_DEBUGGER (self), IDE_DEBUGGER_TARGET, bytes);
+}
+
+static void
+gbp_lldb_debugger_write_output_cb (GObject      *object,
+                                   GAsyncResult *result,
+                                   gpointer      user_data)
+{
+  GOutputStream *stream = (GOutputStream *)object;
+  g_autoptr(GbpLldbDebugger) self = user_data;
+  g_autoptr(GError) error = NULL;
+
+  g_assert (G_IS_OUTPUT_STREAM (stream));
+  g_assert (GBP_IS_LLDB_DEBUGGER (self));
+
+  self->inferior_busy = FALSE;
+
+  if (!g_output_stream_write_all_finish (stream, result, NULL, &error))
+    {
+      /* The terminal went away. Show the rest in the debugger log. */
+      g_debug ("Failed to write program output: %s", error->message);
+      g_clear_object (&self->inferior_out);
+    }
+
+  gbp_lldb_debugger_write_next_output (self);
+}
+
+static void
+gbp_lldb_debugger_write_next_output (GbpLldbDebugger *self)
+{
+  GBytes *bytes;
+
+  g_assert (GBP_IS_LLDB_DEBUGGER (self));
+
+  if (self->inferior_busy)
+    return;
+
+  while ((bytes = g_queue_pop_head (&self->inferior_queue)))
+    {
+      if (self->inferior_out == NULL)
+        {
+          gbp_lldb_debugger_log_target (self, bytes);
+          continue;
+        }
+
+      /* Writing must not block the main loop: the terminal that drains this
+       * PTY runs on it, so a blocking write on a full PTY would deadlock.
+       */
+      self->inferior_busy = TRUE;
+      g_output_stream_write_all_async (self->inferior_out,
+                                       g_bytes_get_data (bytes, NULL),
+                                       g_bytes_get_size (bytes),
+                                       G_PRIORITY_DEFAULT,
+                                       NULL,
+                                       gbp_lldb_debugger_write_output_cb,
+                                       g_object_ref (self));
+      /* The data must stay valid until the write completes */
+      g_object_set_data_full (G_OBJECT (self->inferior_out),
+                              "gbp-lldb-pending",
+                              bytes,
+                              (GDestroyNotify)g_bytes_unref);
+      return;
+    }
+}
+
+static void
+gbp_lldb_debugger_write_output (GbpLldbDebugger *self,
+                                const char      *data,
+                                gsize            len)
+{
+  g_assert (GBP_IS_LLDB_DEBUGGER (self));
+
+  if (self->inferior_out == NULL)
+    {
+      gbp_lldb_debugger_log_target (self, g_bytes_new (data, len));
+      return;
+    }
+
+  g_queue_push_tail (&self->inferior_queue, g_bytes_new (data, len));
+  gbp_lldb_debugger_write_next_output (self);
+}
+
 static void
 gbp_lldb_debugger_process_events (GbpLldbDebugger *self,
                                   JsonObject      *message)
@@ -717,6 +828,8 @@ gbp_lldb_debugger_process_events (GbpLldbDebugger *self,
       if (pid > 0)
         {
           g_autofree char *str = g_strdup_printf ("%" G_GINT64_FORMAT, pid);
+
+          self->inferior_pid = pid;
           ide_debugger_thread_group_set_pid (self->group, str);
         }
 
@@ -754,21 +867,17 @@ gbp_lldb_debugger_process_events (GbpLldbDebugger *self,
                                    IDE_DEBUGGER_CONSOLE,
                                    g_bytes_new (output, strlen (output)));
         }
-      else if (self->inferior_out != NULL)
-        {
-          g_output_stream_write_all (self->inferior_out, output, strlen (output), NULL, NULL, NULL);
-        }
       else
         {
-          ide_debugger_emit_log (IDE_DEBUGGER (self),
-                                 IDE_DEBUGGER_TARGET,
-                                 g_bytes_new (output, strlen (output)));
+          gbp_lldb_debugger_write_output (self, output, strlen (output));
         }
     }
   else if (g_strcmp0 (event, "exited") == 0)
     {
       gint64 code = get_int_member (body, "exitCode", 0);
       g_autofree char *str = g_strdup_printf ("%" G_GINT64_FORMAT, code);
+
+      self->program_exited = TRUE;
 
       gbp_lldb_debugger_ensure_group (self);
       ide_debugger_thread_group_set_exit_code (self->group, str);
@@ -778,6 +887,7 @@ gbp_lldb_debugger_process_events (GbpLldbDebugger *self,
     }
   else if (g_strcmp0 (event, "terminated") == 0)
     {
+      self->program_exited = TRUE;
       gbp_lldb_debugger_emit_exited (self, IDE_DEBUGGER_STOP_EXITED_NORMALLY);
 
       /* Ask the adapter to go away so the run command can complete */
@@ -835,6 +945,7 @@ gbp_lldb_debugger_read_cb (GObject      *object,
               g_hash_table_iter_remove (&iter);
             }
 
+          gbp_lldb_debugger_kill_orphan (self);
           gbp_lldb_debugger_emit_exited (self, IDE_DEBUGGER_STOP_EXITED);
         }
 
@@ -1754,6 +1865,10 @@ gbp_lldb_debugger_destroy (IdeObject *object)
   if (self->read_cancellable != NULL)
     g_cancellable_cancel (self->read_cancellable);
 
+  gbp_lldb_debugger_kill_orphan (self);
+
+  g_queue_clear_full (&self->inferior_queue, (GDestroyNotify)g_bytes_unref);
+
   if (self->pending != NULL)
     {
       GHashTableIter iter;
@@ -1834,6 +1949,7 @@ gbp_lldb_debugger_class_init (GbpLldbDebuggerClass *klass)
 static void
 gbp_lldb_debugger_init (GbpLldbDebugger *self)
 {
+  g_queue_init (&self->inferior_queue);
   self->rx = g_byte_array_new ();
   self->read_cancellable = g_cancellable_new ();
   self->pending = g_hash_table_new_full (g_int64_hash, g_int64_equal, g_free, g_object_unref);
