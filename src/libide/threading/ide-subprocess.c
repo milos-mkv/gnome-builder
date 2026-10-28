@@ -430,7 +430,7 @@ ide_subprocess_check_exit_status (IdeSubprocess  *self,
 
   g_return_val_if_fail (IDE_IS_SUBPROCESS (self), FALSE);
 
-  exit_status = ide_subprocess_get_exit_status (self);
+  exit_status = ide_subprocess_get_status (self);
 
   return g_spawn_check_wait_status (exit_status, error);
 }

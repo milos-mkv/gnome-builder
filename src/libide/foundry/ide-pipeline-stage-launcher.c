@@ -148,7 +148,8 @@ ide_pipeline_stage_launcher_wait_cb (GObject      *object,
       IDE_EXIT;
     }
 
-  exit_status = ide_subprocess_get_exit_status (subprocess);
+  /* g_spawn_check_wait_status() needs the raw status, not the exit code */
+  exit_status = ide_subprocess_get_status (subprocess);
 
   if (priv->ignore_exit_status)
     IDE_GOTO (ignore_exit_failures);
