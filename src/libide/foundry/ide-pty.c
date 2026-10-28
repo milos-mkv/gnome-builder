@@ -43,6 +43,9 @@ ide_pty_new_sync (GError **error)
 {
   VtePty *ret;
   int fd;
+#ifdef __APPLE__
+  int producer_fd;
+#endif
 
   fd = ide_pty_intercept_create_consumer ();
 
@@ -56,11 +59,24 @@ ide_pty_new_sync (GError **error)
       return NULL;
     }
 
+#ifdef __APPLE__
+  /* On macOS, tcgetattr()/tcsetattr() on a PTY consumer fail with ENOTTY
+   * until the producer side has been opened. VTE does this in
+   * vte_pty_set_utf8(), so keep a producer open while we set that up.
+   */
+  producer_fd = ide_pty_intercept_create_producer (fd, TRUE);
+#endif
+
   if ((ret = vte_pty_new_foreign_sync (fd, NULL, error)))
     {
       if (!vte_pty_set_utf8 (ret, TRUE, error))
         g_clear_object (&ret);
     }
+
+#ifdef __APPLE__
+  if (producer_fd != IDE_PTY_FD_INVALID)
+    close (producer_fd);
+#endif
 
   return ret;
 }
