@@ -26,6 +26,9 @@
 #include <sched.h>
 #include <stdlib.h>
 #include <unistd.h>
+#ifdef __APPLE__
+# include <sys/resource.h>
+#endif
 
 #include <glib/gi18n.h>
 
@@ -185,6 +188,25 @@ is_running_in_shell (void)
   return TRUE;
 }
 
+#ifdef __APPLE__
+/*
+ * Applications started by launchd get a soft RLIMIT_NOFILE of 256. Directory
+ * monitoring uses kqueue on macOS, which needs a file descriptor per watched
+ * directory, so raise the soft limit to something usable for larger projects.
+ */
+static void
+raise_nofile_limit (void)
+{
+  struct rlimit rl;
+
+  if (getrlimit (RLIMIT_NOFILE, &rl) == 0 && rl.rlim_cur < 10240)
+    {
+      rl.rlim_cur = MIN (10240, rl.rlim_max);
+      setrlimit (RLIMIT_NOFILE, &rl);
+    }
+}
+#endif
+
 gint
 main (gint   argc,
       gchar *argv[])
@@ -201,6 +223,10 @@ main (gint   argc,
    */
   messages_debug = g_strdup (getenv ("G_MESSAGES_DEBUG"));
   unsetenv ("G_MESSAGES_DEBUG");
+
+#ifdef __APPLE__
+  raise_nofile_limit ();
+#endif
 
   dex_init ();
 
