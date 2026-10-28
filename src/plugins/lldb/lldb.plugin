@@ -1,0 +1,10 @@
+[Plugin]
+Authors=GNOME Builder contributors
+Builtin=true
+Copyright=Copyright © 2026 GNOME Builder contributors
+Description=Provides debugger integration with LLDB using the Debug Adapter Protocol
+Embedded=_gbp_lldb_register_types
+Module=lldb
+Name=LLDB Debugger
+X-Category=debuggers
+X-Debugger-Languages=c,chdr,cpp,cpphdr,rust,vala,asm
