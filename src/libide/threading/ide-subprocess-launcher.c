@@ -105,11 +105,20 @@ child_setup_func (gpointer data)
     prctl (PR_SET_PDEATHSIG, SIGKILL);
 #endif
 
+#ifndef __APPLE__
+  /*
+   * On macOS, when a session leader that owns a controlling terminal exits,
+   * the kernel revokes that terminal and every open fd to it. We share a
+   * single PTY producer across successive processes (such as pipeline
+   * stages), so taking it as the controlling TTY would break every process
+   * that runs after the first one.
+   */
   if (flags & CHILD_SETUP_TTY)
     {
       if (isatty (STDIN_FILENO))
         ioctl (STDIN_FILENO, TIOCSCTTY, 0);
     }
+#endif
 }
 
 static void
