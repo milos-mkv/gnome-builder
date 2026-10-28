@@ -8,7 +8,7 @@
       <attribute name="description" translatable="yes">Search documentation for installed SDKs</attribute>
       <attribute name="page" translatable="yes">Application</attribute>
       <attribute name="group" translatable="yes">Search</attribute>
-      <attribute name="accel">&lt;control&gt;parenright</attribute>
+      <attribute name="accel">&lt;primary&gt;parenright</attribute>
     </item>
   </menu>
 </interface>

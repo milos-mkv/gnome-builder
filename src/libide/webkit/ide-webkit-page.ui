@@ -11,7 +11,7 @@
             <property name="propagation-phase">capture</property>
             <child>
               <object class="GtkShortcut">
-                <property name="trigger">&lt;ctrl&gt;f</property>
+                <property name="trigger">&lt;primary&gt;f</property>
                 <property name="action">action(page.search.show)</property>
               </object>
             </child>

@@ -14,7 +14,7 @@
         <attribute name="label" translatable="yes">Global Search</attribute>
         <attribute name="description" translatable="yes">Display the global search</attribute>
         <attribute name="action">context.workbench.global-search</attribute>
-        <attribute name="accel">&lt;control&gt;Return</attribute>
+        <attribute name="accel">&lt;primary&gt;Return</attribute>
       </item>
     </section>
   </menu>
@@ -46,7 +46,7 @@
         <attribute name="description" translatable="yes">Toggle the bottom panel in or out of view</attribute>
         <attribute name="verb-icon">panel-bottom-symbolic</attribute>
         <attribute name="action">workspace.panel.toggle-bottom</attribute>
-        <attribute name="accel">&lt;control&gt;F9</attribute>
+        <attribute name="accel">&lt;primary&gt;F9</attribute>
       </item>
     </section>
   </menu>
@@ -80,14 +80,14 @@
         <attribute name="description" translatable="yes">Display errors and warnings found during build</attribute>
         <attribute name="action">workspace.buildui.status.show</attribute>
         <attribute name="target" type="s">'errors'</attribute>
-        <attribute name="accel">&lt;control&gt;&lt;alt&gt;question</attribute>
+        <attribute name="accel">&lt;primary&gt;&lt;alt&gt;question</attribute>
       </item>
       <item>
         <attribute name="id">org.gnome.builder.editor.goto-line</attribute>
         <attribute name="label" translatable="yes">Go to Line</attribute>
         <attribute name="description" translatable="yes">Jump to a specific line or column</attribute>
         <attribute name="action">workspace.editorui.page.go-to-line</attribute>
-        <attribute name="accel">&lt;control&gt;i</attribute>
+        <attribute name="accel">&lt;primary&gt;i</attribute>
       </item>
     </section>
   </menu>
@@ -101,7 +101,7 @@
         <attribute name="label" translatable="yes">Close Page</attribute>
         <attribute name="description" translatable="yes">Close the current page</attribute>
         <attribute name="action">frame.close-page-or-frame</attribute>
-        <attribute name="accel">&lt;control&gt;w</attribute>
+        <attribute name="accel">&lt;primary&gt;w</attribute>
       </item>
       <item>
         <attribute name="id">org.gnome.builder.project-tree-reveal</attribute>
@@ -114,7 +114,7 @@
         <attribute name="label" translatable="yes">Save</attribute>
         <attribute name="description" translatable="yes">Save the current page</attribute>
         <attribute name="action">page.save</attribute>
-        <attribute name="accel">&lt;control&gt;s</attribute>
+        <attribute name="accel">&lt;primary&gt;s</attribute>
       </item>
       <item>
         <attribute name="id">org.gnome.builder.page.move-down</attribute>
@@ -158,7 +158,7 @@
         <attribute name="label" translatable="yes">Print…</attribute>
         <attribute name="description" translatable="yes">Print the current page</attribute>
         <attribute name="action">page.editor.print</attribute>
-        <attribute name="accel">&lt;control&gt;p</attribute>
+        <attribute name="accel">&lt;primary&gt;p</attribute>
       </item>
     </section>
     <section id="menu-search-editor-section">
@@ -169,28 +169,28 @@
         <attribute name="label" translatable="yes">Find…</attribute>
         <attribute name="description" translatable="yes">Find a string in the current page</attribute>
         <attribute name="action">page.search.begin-find</attribute>
-        <attribute name="accel">&lt;ctrl&gt;f</attribute>
+        <attribute name="accel">&lt;primary&gt;f</attribute>
       </item>
       <item>
         <attribute name="id">org.gnome.builder.editor.find-replace</attribute>
         <attribute name="label" translatable="yes">Find/Replace…</attribute>
         <attribute name="description" translatable="yes">Find and replace a string in the current page</attribute>
         <attribute name="action">page.search.begin-replace</attribute>
-        <attribute name="accel">&lt;ctrl&gt;h</attribute>
+        <attribute name="accel">&lt;control&gt;h</attribute>
       </item>
       <item>
         <attribute name="id">org.gnome.builder.editor.search.move-next</attribute>
         <attribute name="label" translatable="yes">Move to next search result</attribute>
         <attribute name="description" translatable="yes">Move to and select the next available search result</attribute>
         <attribute name="action">page.search.move-next</attribute>
-        <attribute name="accel">&lt;control&gt;g</attribute>
+        <attribute name="accel">&lt;primary&gt;g</attribute>
       </item>
       <item>
         <attribute name="id">org.gnome.builder.editor.search.move-previous</attribute>
         <attribute name="label" translatable="yes">Move to previous search result</attribute>
         <attribute name="description" translatable="yes">Move to and select the previous search result</attribute>
         <attribute name="action">page.search.move-previous</attribute>
-        <attribute name="accel">&lt;control&gt;&lt;shift&gt;g</attribute>
+        <attribute name="accel">&lt;primary&gt;&lt;shift&gt;g</attribute>
       </item>
     </section>
   </menu>

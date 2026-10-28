@@ -9,7 +9,7 @@
         <attribute name="hidden-when">action-disabled</attribute>
         <attribute name="label" translatable="yes">Run with Profiler</attribute>
         <attribute name="verb-icon">builder-profiler-symbolic</attribute>
-        <attribute name="accel">&lt;Control&gt;&lt;Shift&gt;&lt;Alt&gt;p</attribute>
+        <attribute name="accel">&lt;primary&gt;&lt;Shift&gt;&lt;Alt&gt;p</attribute>
         <attribute name="description" translatable="yes">Run the project with profiler</attribute>
       </item>
     </section>
@@ -131,7 +131,7 @@
       <item>
         <attribute name="label" translatable="yes">Save</attribute>
         <attribute name="action">page.save-as</attribute>
-        <attribute name="accel">&lt;control&gt;s</attribute>
+        <attribute name="accel">&lt;primary&gt;s</attribute>
       </item>
     </section>
     <section id="gbp-sysprof-page-record-section">
@@ -146,7 +146,7 @@
       <item>
         <attribute name="label" translatable="yes">Close</attribute>
         <attribute name="action">frame.close-page-or-frame</attribute>
-        <attribute name="accel">&lt;control&gt;w</attribute>
+        <attribute name="accel">&lt;primary&gt;w</attribute>
       </item>
     </section>
   </menu>

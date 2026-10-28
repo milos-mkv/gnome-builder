@@ -62,7 +62,7 @@
         <attribute name="label" translatable="yes">_Quit</attribute>
         <attribute name="description" translatable="yes">Quit without saving changes</attribute>
         <attribute name="action">app.quit</attribute>
-        <attribute name="accel">&lt;control&gt;q</attribute>
+        <attribute name="accel">&lt;primary&gt;q</attribute>
       </item>
     </section>
   </menu>

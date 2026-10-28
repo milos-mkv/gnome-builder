@@ -156,13 +156,13 @@
         <attribute name="id">org.gnome.builder.page.save</attribute>
         <attribute name="label" translatable="yes">Save</attribute>
         <attribute name="action">page.save</attribute>
-        <attribute name="accel">&lt;ctrl&gt;s</attribute>
+        <attribute name="accel">&lt;primary&gt;s</attribute>
       </item>
       <item>
         <attribute name="id">org.gnome.builder.page.save-as</attribute>
         <attribute name="label" translatable="yes">Save _As</attribute>
         <attribute name="action">page.save-as</attribute>
-        <attribute name="accel">&lt;ctrl&gt;&lt;shift&gt;s</attribute>
+        <attribute name="accel">&lt;primary&gt;&lt;shift&gt;s</attribute>
       </item>
     </section>
     <section id="ide-editor-page-search-section">
@@ -170,13 +170,13 @@
         <attribute name="id">org.gnome.builder.editor.find</attribute>
         <attribute name="label" translatable="yes">Find…</attribute>
         <attribute name="action">page.search.begin-find</attribute>
-        <attribute name="accel">&lt;ctrl&gt;f</attribute>
+        <attribute name="accel">&lt;primary&gt;f</attribute>
       </item>
       <item>
         <attribute name="id">org.gnome.builder.editor.find-replace</attribute>
         <attribute name="label" translatable="yes">Find/Replace…</attribute>
         <attribute name="action">page.search.begin-replace</attribute>
-        <attribute name="accel">&lt;ctrl&gt;h</attribute>
+        <attribute name="accel">&lt;control&gt;h</attribute>
       </item>
     </section>
     <section id="ide-editor-page-print-section">
@@ -184,7 +184,7 @@
         <attribute name="id">org.gnome.builder.editor.print</attribute>
         <attribute name="label" translatable="yes">Print…</attribute>
         <attribute name="action">page.editor.print</attribute>
-        <attribute name="accel">&lt;control&gt;p</attribute>
+        <attribute name="accel">&lt;primary&gt;p</attribute>
       </item>
     </section>
   </menu>
@@ -193,7 +193,7 @@
       <attribute name="id">org.gnome.builder.editor.document.format</attribute>
       <attribute name="label" translatable="yes">Format Document</attribute>
       <attribute name="action">page.editor.format-document</attribute>
-      <attribute name="accel">&lt;ctrl&gt;&lt;shift&gt;f</attribute>
+      <attribute name="accel">&lt;primary&gt;&lt;shift&gt;f</attribute>
     </item>
     <item>
       <attribute name="id">org.gnome.builder.editor.selection.format</attribute>
@@ -209,7 +209,7 @@
       <attribute name="description" translatable="yes">Move the insertion cursor to the previous diagnostic location</attribute>
       <attribute name="action">page.editor.diagnostics.previous</attribute>
       <attribute name="verb-icon">go-previous-symbolic</attribute>
-      <attribute name="accel">&lt;control&gt;&lt;shift&gt;less</attribute>
+      <attribute name="accel">&lt;primary&gt;&lt;shift&gt;less</attribute>
     </item>
     <item>
       <attribute name="id">org.gnome.builder.editor.diagnostics.next</attribute>
@@ -217,7 +217,7 @@
       <attribute name="description" translatable="yes">Move the insertion cursor to the next diagnostic location</attribute>
       <attribute name="action">page.editor.diagnostics.next</attribute>
       <attribute name="verb-icon">go-next-symbolic</attribute>
-      <attribute name="accel">&lt;control&gt;&lt;shift&gt;greater</attribute>
+      <attribute name="accel">&lt;primary&gt;&lt;shift&gt;greater</attribute>
     </item>
   </menu>
 </interface>

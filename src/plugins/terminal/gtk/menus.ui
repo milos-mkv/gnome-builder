@@ -7,7 +7,7 @@
         <attribute name="label" translatable="yes">New _Terminal</attribute>
         <attribute name="action">workspace.terminal.new-in-host</attribute>
         <attribute name="target" type="s">''</attribute>
-        <attribute name="accel">&lt;ctrl&gt;&lt;shift&gt;t</attribute>
+        <attribute name="accel">&lt;primary&gt;&lt;shift&gt;t</attribute>
         <attribute name="verb-icon">builder-terminal-symbolic</attribute>
         <attribute name="description" translatable="yes">Open a new terminal on the host operating system</attribute>
       </item>
@@ -16,7 +16,7 @@
         <attribute name="label" translatable="yes">New _Build Terminal</attribute>
         <attribute name="action">workspace.terminal.new-in-pipeline</attribute>
         <attribute name="target" type="s">''</attribute>
-        <attribute name="accel">&lt;ctrl&gt;&lt;shift&gt;&lt;alt&gt;t</attribute>
+        <attribute name="accel">&lt;primary&gt;&lt;shift&gt;&lt;alt&gt;t</attribute>
         <attribute name="verb-icon">builder-terminal-symbolic</attribute>
         <attribute name="description" translatable="yes">Open a new terminal in project's build pipeline</attribute>
       </item>
@@ -25,7 +25,7 @@
         <attribute name="label" translatable="yes">New _Runtime Terminal</attribute>
         <attribute name="action">workspace.terminal.new-in-runtime</attribute>
         <attribute name="target" type="s">''</attribute>
-        <attribute name="accel">&lt;ctrl&gt;&lt;alt&gt;t</attribute>
+        <attribute name="accel">&lt;primary&gt;&lt;alt&gt;t</attribute>
         <attribute name="verb-icon">builder-terminal-symbolic</attribute>
         <attribute name="description" translatable="yes">Open a new terminal in project's runtime environment</attribute>
       </item>

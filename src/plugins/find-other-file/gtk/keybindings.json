@@ -1,1 +1,1 @@
-{ "trigger" : "<Control><Shift>o", "action" : "workspace.find-other-file.focus", "when" : "canEdit()", "phase" : "capture" },
+{ "trigger" : "<Primary><Shift>o", "action" : "workspace.find-other-file.focus", "when" : "canEdit()", "phase" : "capture" },

@@ -24,6 +24,7 @@
 
 #include <gtk/gtk.h>
 #include <json-glib/json-glib.h>
+#include <string.h>
 #include <tmpl-glib.h>
 
 #include "ide-gui-global.h"
@@ -370,6 +371,32 @@ parse_phase (const char          *str,
   return FALSE;
 }
 
+#ifdef __APPLE__
+/*
+ * "<Primary>" is the platform primary modifier in our shortcut and menu
+ * definitions. GTK 4 always parses it as Control, but on macOS users expect
+ * Command, which GTK calls "<Meta>".
+ */
+static char *
+localize_accel (const char *accel)
+{
+  g_autoptr(GString) str = g_string_new (accel);
+  const char *needle = "<primary>";
+
+  for (gsize i = 0; i + strlen (needle) <= str->len; i++)
+    {
+      if (g_ascii_strncasecmp (str->str + i, needle, strlen (needle)) == 0)
+        {
+          g_string_erase (str, i, strlen (needle));
+          g_string_insert (str, i, "<Meta>");
+          i += strlen ("<Meta>") - 1;
+        }
+    }
+
+  return g_string_free (g_steal_pointer (&str), FALSE);
+}
+#endif
+
 static gboolean
 populate_from_object (IdeShortcutBundle  *self,
                       JsonNode           *node,
@@ -380,6 +407,9 @@ populate_from_object (IdeShortcutBundle  *self,
   g_autoptr(GtkShortcut) shortcut = NULL;
   g_autoptr(TmplExpr) when = NULL;
   g_autoptr(GVariant) args = NULL;
+#ifdef __APPLE__
+  g_autofree char *localized_trigger = NULL;
+#endif
   const char *trigger_str = NULL;
   const char *id_str = NULL;
   const char *override_str = NULL;
@@ -419,7 +449,14 @@ populate_from_object (IdeShortcutBundle  *self,
     {
       trigger = g_object_ref (gtk_never_trigger_get ());
     }
-  else if (!(trigger = gtk_shortcut_trigger_parse_string (trigger_str)))
+  else if (
+#ifdef __APPLE__
+           !(localized_trigger = localize_accel (trigger_str)) ||
+           !(trigger = gtk_shortcut_trigger_parse_string (localized_trigger))
+#else
+           !(trigger = gtk_shortcut_trigger_parse_string (trigger_str))
+#endif
+          )
     {
       g_set_error (error,
                    G_IO_ERROR,

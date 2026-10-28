@@ -36,7 +36,7 @@
         <attribute name="label" translatable="yes">_Build</attribute>
         <attribute name="description" translatable="yes">Build the project</attribute>
         <attribute name="action">context.build-manager.build</attribute>
-        <attribute name="accel">&lt;ctrl&gt;&lt;alt&gt;&lt;shift&gt;b</attribute>
+        <attribute name="accel">&lt;primary&gt;&lt;alt&gt;&lt;shift&gt;b</attribute>
         <attribute name="verb-icon">builder-build-symbolic</attribute>
       </item>
       <item>
@@ -59,7 +59,7 @@
         <attribute name="description" translatable="yes">Cancel the current build operation</attribute>
         <attribute name="action">context.build-manager.cancel</attribute>
         <attribute name="verb-icon">process-stop-symbolic</attribute>
-        <attribute name="accel">&lt;ctrl&gt;&lt;shift&gt;&lt;alt&gt;c</attribute>
+        <attribute name="accel">&lt;primary&gt;&lt;shift&gt;&lt;alt&gt;c</attribute>
       </item>
     </section>
     <section id="build-export">
@@ -97,7 +97,7 @@
       <item>
         <attribute name="label" translatable="yes">Show Bui_ld Output</attribute>
         <attribute name="action">workspace.buildui.log.show</attribute>
-        <attribute name="accel">&lt;ctrl&gt;&lt;shift&gt;l</attribute>
+        <attribute name="accel">&lt;primary&gt;&lt;shift&gt;l</attribute>
         <attribute name="description" translatable="yes">Display panel containing the build log</attribute>
         <attribute name="verb-icon">builder-terminal-symbolic</attribute>
       </item>
@@ -123,7 +123,7 @@
         <attribute name="hidden-when">action-disabled</attribute>
         <attribute name="target" type="s">'run'</attribute>
         <attribute name="label" translatable="yes">Run</attribute>
-        <attribute name="accel">&lt;Control&gt;&lt;Shift&gt;space</attribute>
+        <attribute name="accel">&lt;primary&gt;&lt;Shift&gt;space</attribute>
         <attribute name="verb-icon">builder-run-start-symbolic</attribute>
         <attribute name="description" translatable="yes">Run the project</attribute>
       </item>
@@ -132,7 +132,7 @@
         <attribute name="hidden-when">action-disabled</attribute>
         <attribute name="action">context.run-manager.restart</attribute>
         <attribute name="label" translatable="yes">Restart Program</attribute>
-        <attribute name="accel">&lt;Control&gt;&lt;Shift&gt;space</attribute>
+        <attribute name="accel">&lt;primary&gt;&lt;Shift&gt;space</attribute>
         <attribute name="verb-icon">builder-run-start-symbolic</attribute>
         <attribute name="description" translatable="yes">Restart the running program</attribute>
       </item>

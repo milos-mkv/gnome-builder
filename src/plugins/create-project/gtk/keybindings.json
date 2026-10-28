@@ -1,1 +1,1 @@
-{ "id" : "org.gnome.builder.project.create", "trigger" : "<Control><Alt>n", "action" : "app.present-greeter-with-page", "args" : "'create-project'", "phase" : "bubble" },
+{ "id" : "org.gnome.builder.project.create", "trigger" : "<Primary><Alt>n", "action" : "app.present-greeter-with-page", "args" : "'create-project'", "phase" : "bubble" },

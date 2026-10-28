@@ -30,7 +30,7 @@
         <attribute name="id">org.gnome.builder.preferences</attribute>
         <attribute name="label" translatable="yes">Preferences</attribute>
         <attribute name="action">app.preferences</attribute>
-        <attribute name="accel">&lt;control&gt;comma</attribute>
+        <attribute name="accel">&lt;primary&gt;comma</attribute>
       </item>
       <item>
         <attribute name="id">ide-greeter-workspace-menu-shortcuts</attribute>
@@ -59,7 +59,7 @@
         <attribute name="action">app.present-greeter-with-page</attribute>
         <attribute name="target" type="s">''</attribute>
         <attribute name="description" translatable="yes">Open a new or existing project</attribute>
-        <attribute name="accel">&lt;ctrl&gt;&lt;alt&gt;o</attribute>
+        <attribute name="accel">&lt;primary&gt;&lt;alt&gt;o</attribute>
       </item>
       <item>
         <attribute name="id">org.gnome.builder.project.clone</attribute>
@@ -79,7 +79,7 @@
         <attribute name="label" translatable="yes">Open a _Project…</attribute>
         <attribute name="action">app.present-greeter-with-page</attribute>
         <attribute name="target" type="s">''</attribute>
-        <attribute name="accel">&lt;ctrl&gt;&lt;alt&gt;o</attribute>
+        <attribute name="accel">&lt;primary&gt;&lt;alt&gt;o</attribute>
       </item>
       <item>
         <attribute name="id">org.gnome.builder.project.clone</attribute>

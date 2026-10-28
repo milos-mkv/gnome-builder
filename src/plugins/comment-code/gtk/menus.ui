@@ -17,7 +17,7 @@
         <attribute name="description" translatable="yes">Remove comments from the source code selection</attribute>
         <attribute name="action">page.comment-code.comment-code</attribute>
         <attribute name="target" type="s">'1'</attribute>
-        <attribute name="accel">&lt;control&gt;&lt;shift&gt;m</attribute>
+        <attribute name="accel">&lt;primary&gt;&lt;shift&gt;m</attribute>
       </item>
     </section>
   </menu>
