@@ -4,7 +4,7 @@ libide_include_directories += include_directories('.')
 libide_terminal_generated_headers = []
 
 # Ensure we have PCRE2 available
-cc.has_header('pcre2.h', required: true)
+cc.has_header('pcre2.h', required: true, dependencies: dependency('libpcre2-8'))
 
 #
 # Public API Headers
