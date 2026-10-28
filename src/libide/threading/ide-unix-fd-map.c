@@ -424,8 +424,8 @@ ide_unix_fd_map_steal_from (IdeUnixFDMap  *self,
 
 #ifdef __APPLE__
 static int
-pipe2 (int      fd_pair[2],
-       unsigned flags)
+ide_pipe2 (int      fd_pair[2],
+           unsigned flags)
 {
   int r = pipe (fd_pair);
 
@@ -440,6 +440,8 @@ pipe2 (int      fd_pair[2],
 
   return r;
 }
+
+# define pipe2(fds, flags) ide_pipe2 (fds, flags)
 #endif
 
 /**
